@@ -1,0 +1,6 @@
+Bisque
+AppWorkspace
+WhiteSmoke
+Window
+DarkSlateGray
+Black

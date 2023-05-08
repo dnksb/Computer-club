@@ -1,0 +1,6 @@
+DarkSlateGray
+AppWorkspace
+Teal
+WindowFrame
+WhiteSmoke
+DarkSlateGray
