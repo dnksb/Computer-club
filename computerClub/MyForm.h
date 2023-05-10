@@ -13,6 +13,7 @@
 #include "type_operation.h"
 #include "local_save.h"
 #include "theme.h"
+#include "lang.h"
 
 namespace computerClub {
 
@@ -48,6 +49,7 @@ namespace computerClub {
 			delete last_time;
 			delete theme;
 			delete save;
+			delete lang;
 			if (components)
 			{
 				delete components;
@@ -55,6 +57,7 @@ namespace computerClub {
 			last_time = nullptr;
 			theme = nullptr;
 			save = nullptr;
+			lang = nullptr;
 		}
 	protected:
 	private: System::Windows::Forms::DataGridView^ dataGridView1;
@@ -98,6 +101,7 @@ namespace computerClub {
 	private: Time* last_time;
 	private: TypeOperation type_operation;
 	private: Theme* theme;
+	private: Lang* lang;
 	private: Save* save;
 		   /// <summary>
 		/// Îáÿçàòåëüíàÿ ïåðåìåííàÿ êîíñòðóêòîðà.
@@ -108,6 +112,7 @@ namespace computerClub {
 		void set_theme()
 		{
 			theme = new Theme(save->Theme());
+			lang = new Lang(save->Lang());
 		}
 		void updateWindow()
 		{
@@ -139,7 +144,6 @@ namespace computerClub {
 			this->textBox3->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->label3->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->textBox4->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
-			this->button2->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->label4->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->label6->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->comboBox1->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
@@ -174,7 +178,96 @@ namespace computerClub {
 			this->textBox4->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextBackGround()));
 			this->textBox2->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextBackGround()));
 			this->comboBox1->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextBackGround()));
+			
+			if (save->Lang() != "Save\\rus_Rus.txt")
+			{
+				this->time->HeaderText = Conv::ToSystemString(lang->data_time);
+				this->operationType->HeaderText = Conv::ToSystemString(lang->data_type);
+				this->client->HeaderText = Conv::ToSystemString(lang->data_client);
+				this->computer->HeaderText = Conv::ToSystemString(lang->data_computer);
 
+				this->ôàéëToolStripMenuItem->Text = Conv::ToSystemString(lang->file);
+				this->èìïðîòèðîâàòüToolStripMenuItem->Text = Conv::ToSystemString(lang->imp);
+				this->ýêñïîðòèðîâàòüToolStripMenuItem->Text = Conv::ToSystemString(lang->exp);
+				this->ñîõðàíèòüToolStripMenuItem->Text = Conv::ToSystemString(lang->save);
+				this->îò÷åòToolStripMenuItem->Text = Conv::ToSystemString(lang->report);
+				this->íàñòðîéêàToolStripMenuItem->Text = Conv::ToSystemString(lang->settings);
+				this->âðåìÿÐàáîòûToolStripMenuItem->Text = Conv::ToSystemString(lang->work_time);
+				this->öåíàToolStripMenuItem->Text = Conv::ToSystemString(lang->price);
+				this->ñìåíèòüÏðîôèëüToolStripMenuItem->Text = Conv::ToSystemString(lang->change);
+				this->ðåãèòðàöèÿToolStripMenuItem->Text = Conv::ToSystemString(lang->login);
+				this->âèäToolStripMenuItem->Text = Conv::ToSystemString(lang->view);
+				this->òåìíàÿÒåìàToolStripMenuItem->Text = Conv::ToSystemString(lang->theme);
+				this->ñâåòëàÿToolStripMenuItem->Text = Conv::ToSystemString(lang->light);
+				this->òåìíàÿToolStripMenuItem->Text = Conv::ToSystemString(lang->dark);
+				this->ñâåòëàÿÒåìàToolStripMenuItem->Text = Conv::ToSystemString(lang->lang);
+				this->ðóññêèéToolStripMenuItem->Text = Conv::ToSystemString(lang->rus);
+				this->àíãëèéñêèéToolStripMenuItem->Text = Conv::ToSystemString(lang->eng);
+				this->ñïðàâêàToolStripMenuItem->Text = Conv::ToSystemString(lang->help);
+
+				this->button1->Text = Conv::ToSystemString(lang->add);
+				this->label1->Text = Conv::ToSystemString(lang->time);
+				this->label2->Text = Conv::ToSystemString(lang->type);
+				this->label3->Text = Conv::ToSystemString(lang->client);
+				this->label4->Text = Conv::ToSystemString(lang->computer);
+				this->comboBox1->Text = Conv::ToSystemString(lang->CAME);
+				this->label5->Text = Conv::ToSystemString(lang->date);
+				this->label6->Text = Conv::ToSystemString(lang->user);
+				this->button2->Text = Conv::ToSystemString(lang->finish);
+
+				this->comboBox1->Items->Clear();
+				this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(4) {
+					Conv::ToSystemString(lang->CAME),
+						Conv::ToSystemString(lang->WAIT),
+						Conv::ToSystemString(lang->SIT),
+						Conv::ToSystemString(lang->LEAVE)
+				});
+			}
+			else
+			{
+				SetRus();
+			}
+		}
+		void SetRus()
+		{
+			this->time->HeaderText = % String("Âðåìÿ");
+			this->operationType->HeaderText = % String("Òèï");
+			this->client->HeaderText = % String("Êëèåíò");
+			this->computer->HeaderText = % String("Êîìïüþòåð");
+			this->ôàéëToolStripMenuItem->Text = % String("Ôàéë");
+			this->èìïðîòèðîâàòüToolStripMenuItem->Text = % String("Èìïîðòèðîâàòü");
+			this->ýêñïîðòèðîâàòüToolStripMenuItem->Text = % String("Ýêñïîðòèðîâàòü");
+			this->ñîõðàíèòüToolStripMenuItem->Text = % String("Ñîõðàíèòü");
+			this->îò÷åòToolStripMenuItem->Text = % String("Îò÷åò");
+			this->íàñòðîéêàToolStripMenuItem->Text = % String("Íàñòðîéêè");
+			this->âðåìÿÐàáîòûToolStripMenuItem->Text = % String("Âðåìÿ ðàáîòû");
+			this->öåíàToolStripMenuItem->Text = % String("Öåíà");
+			this->ñìåíèòüÏðîôèëüToolStripMenuItem->Text = % String("Ñìåíèòü ïðîôèëü");
+			this->ðåãèòðàöèÿToolStripMenuItem->Text = % String("Ðåãèñòðàöèÿ");
+			this->âèäToolStripMenuItem->Text = % String("Âèä");
+			this->òåìíàÿÒåìàToolStripMenuItem->Text = % String("Òåìà");
+			this->ñâåòëàÿToolStripMenuItem->Text = % String("Ñâåòëàÿ");
+			this->òåìíàÿToolStripMenuItem->Text = % String("Òåìíàÿ");
+			this->ñâåòëàÿÒåìàToolStripMenuItem->Text = % String("ßçûê");
+			this->ðóññêèéToolStripMenuItem->Text = % String("Ðóññêèé");
+			this->àíãëèéñêèéToolStripMenuItem->Text = % String("Àíãëèéñêèé");
+			this->ñïðàâêàToolStripMenuItem->Text = % String("Ñïðàâêà");
+			this->button1->Text = % String("Äîáàâèòü çàïèñü");
+			this->label1->Text = % String("Âðåìÿ");
+			this->label2->Text = % String("Òèï");
+			this->label3->Text = % String("Êëèåíò");
+			this->label4->Text = % String("Êîìïüþòåð");
+			this->comboBox1->Text = % String("Ïðèøåë");
+			this->label5->Text = % String("Äàòà");
+			this->label6->Text = % String("Ïîëüçîâàòåëü");
+			this->button2->Text = % String("Çàêîí÷èòü äåíü");
+			this->comboBox1->Items->Clear();
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(4) {
+				% String("Ïðèøåë"),
+				% String("Âñòàë â î÷åðåäü"),
+				% String("Ñåë çà êîìïüþòåð"),
+				% String("Óøåë")
+			});
 		}
 		void saveSetting()
 		{
@@ -602,10 +695,10 @@ namespace computerClub {
 			MessageBox::Show("Âðåìÿ íåïðàâèëüíî ââåäåíî");
 			return;
 		}
-		if (comboBox1->Text != "ïðèøåë" && 
-			comboBox1->Text != "âñòàë â î÷åðåäü" &&
-			comboBox1->Text != "ñåë çà êîìïüþòåð" &&
-			comboBox1->Text != "óøåë")
+		if (comboBox1->Text != "Ïðèøåë" && 
+			comboBox1->Text != "Âñòàë â î÷åðåäü" &&
+			comboBox1->Text != "Ñåë çà êîìïüþòåð" &&
+			comboBox1->Text != "Óøåë")
 		{
 			MessageBox::Show("îïåðàöèÿ íåïðàâèëüíî âûáðàíà");
 			return;
@@ -676,9 +769,17 @@ namespace computerClub {
 		saveSetting();
 	}
 	private: System::Void ðóññêèéToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		delete lang;
+		save->Lang("Save\\rus_Rus.txt");
+		lang = new Lang("Save\\rus_Rus.txt");
+		updateWindow();
 		saveSetting();
 	}
 	private: System::Void àíãëèéñêèéToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		delete lang;
+		save->Lang("Save\\eng_Eng.txt");
+		lang = new Lang("Save\\eng_Eng.txt");
+		updateWindow();
 		saveSetting();
 	}
 };

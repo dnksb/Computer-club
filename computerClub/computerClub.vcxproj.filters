@@ -30,13 +30,13 @@
     <ClCompile Include="converter.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="language.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="local_save.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="theme.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="lang.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,10 +62,10 @@
     <ClInclude Include="local_save.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="language.h">
+    <ClInclude Include="theme.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="theme.h">
+    <ClInclude Include="lang.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

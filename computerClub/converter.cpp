@@ -3,7 +3,8 @@
 System::String^ Conv::ToSystemString(std::string str)
 {
 	System::String^ tmp_str = "";
-	for each (char ch in str) tmp_str += System::Convert::ToChar(ch);
+	for (int i = 0; i < str.length(); i++)
+		tmp_str += System::Convert::ToChar(str[i]);
 	return tmp_str;
 }
 

@@ -121,7 +121,7 @@
   <ItemGroup>
     <ClCompile Include="client\client.cpp" />
     <ClCompile Include="converter.cpp" />
-    <ClCompile Include="language.cpp" />
+    <ClCompile Include="lang.cpp" />
     <ClCompile Include="local_save.cpp" />
     <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="table\table.cpp" />
@@ -131,7 +131,7 @@
   <ItemGroup>
     <ClInclude Include="client\client.hpp" />
     <ClInclude Include="converter.h" />
-    <ClInclude Include="language.h" />
+    <ClInclude Include="lang.h" />
     <ClInclude Include="local_save.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>

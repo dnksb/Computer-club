@@ -1,10 +1,12 @@
 #pragma once
-#ifndef LANGUAGE
-#define LANGUAGE
 #include <string>
+#include <fstream>
 
-struct Menu
+class Lang
 {
+	std::ifstream file_source;
+
+public:
 	std::string file;
 	std::string imp;
 	std::string exp;
@@ -14,7 +16,7 @@ struct Menu
 	std::string lang;
 	std::string rus;
 	std::string eng;
-	std::string time;
+	std::string work_time;
 	std::string price;
 	std::string change;
 	std::string login;
@@ -22,16 +24,13 @@ struct Menu
 	std::string light;
 	std::string dark;
 	std::string help;
-};
-struct Table 
-{
-	std::string time;
-	std::string type;
-	std::string client;
-	std::string computer;
-};
-struct MainForm
-{
+	std::string view;
+
+	std::string data_time;
+	std::string data_type;
+	std::string data_client;
+	std::string data_computer;
+
 	std::string date;
 	std::string user;
 	std::string time;
@@ -40,18 +39,12 @@ struct MainForm
 	std::string computer;
 	std::string add;
 	std::string finish;
+
+	std::string CAME;
+	std::string WAIT;
+	std::string SIT;
+	std::string LEAVE;
+
+	Lang(std::string);
 };
 
-class Language
-{
-private:
-	Menu menu;
-	Table table;
-	MainForm form;
-public:
-	Language(const std::string);
-	void set_lang(const std::string);
-	void update(const std::string);
-};
-
-#endif // LANGUAGE
