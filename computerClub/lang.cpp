@@ -41,4 +41,10 @@ Lang::Lang(std::string value)
 	file_source >> WAIT;
 	file_source >> SIT;
 	file_source >> LEAVE;
+
+	file_source >> error;
+
+	file_source >> Set;
+	file_source >> time_start;
+	file_source >> time_end;
 }

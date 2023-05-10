@@ -32,3 +32,7 @@ Came
 Waiting
 Village
 Gone
+Error_something_wrong
+Set
+Time_start
+Time_end

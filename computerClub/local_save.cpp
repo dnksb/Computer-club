@@ -11,6 +11,7 @@ Save::Save(std::string value)
     file >> lang;
     file >> price;
     file >> time_start;
+    file >> time_end;
 }
 
 Save::~Save()
@@ -28,6 +29,7 @@ void Save::SaveData(std::string value)
     file << lang << "\n";
     file << price << "\n";
     file << time_start << "\n";
+    file << time_end << "\n";
 }
 
 std::string Save::Name()
@@ -55,6 +57,11 @@ std::string Save::TimeStart()
     return time_start;
 }
 
+std::string Save::TimeEnd()
+{
+    return time_end;
+}
+
 void Save::Name(std::string value)
 {
     name = value;
@@ -78,4 +85,9 @@ void Save::Price(int value)
 void Save::TimeStart(std::string value)
 {
     time_start = value;
+}
+
+void Save::TimeEnd(std::string value)
+{
+    time_end = value;
 }

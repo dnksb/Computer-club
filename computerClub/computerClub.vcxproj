@@ -79,9 +79,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\danik\С++\computerClub\computerClub\sqlite;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -121,8 +123,13 @@
   <ItemGroup>
     <ClCompile Include="client\client.cpp" />
     <ClCompile Include="converter.cpp" />
+    <ClCompile Include="help.cpp" />
+    <ClCompile Include="inputPrice.cpp" />
+    <ClCompile Include="inputTimeWork.cpp" />
     <ClCompile Include="lang.cpp" />
     <ClCompile Include="local_save.cpp" />
+    <ClCompile Include="login.cpp" />
+    <ClCompile Include="logup.cpp" />
     <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="table\table.cpp" />
     <ClCompile Include="theme.cpp" />
@@ -131,17 +138,45 @@
   <ItemGroup>
     <ClInclude Include="client\client.hpp" />
     <ClInclude Include="converter.h" />
+    <ClInclude Include="help.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="inputPrice.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="inputTimeWork.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="lang.h" />
     <ClInclude Include="local_save.h" />
+    <ClInclude Include="login.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="logup.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="sqlite\sqlite3.h" />
     <ClInclude Include="table\table.hpp" />
     <ClInclude Include="theme.h" />
     <ClInclude Include="time\time.hpp" />
     <ClInclude Include="type_operation.h" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="help.resx">
+      <DependentUpon>help.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputPrice.resx">
+      <DependentUpon>inputPrice.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputTimeWork.resx">
+      <DependentUpon>inputTimeWork.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="logup.resx">
+      <DependentUpon>logup.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MyForm.resx">
       <DependentUpon>MyForm.h</DependentUpon>
     </EmbeddedResource>

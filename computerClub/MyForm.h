@@ -1,11 +1,13 @@
 #pragma once
-#include <xmllite.h>
+#include <regex>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <string.h>
 #include <vector>
 #include <queue>
+#include <winsqlite/winsqlite3.h>
+
 #include "./table/table.hpp"
 #include "./time/time.hpp"
 #include "./client/client.hpp"
@@ -14,6 +16,10 @@
 #include "local_save.h"
 #include "theme.h"
 #include "lang.h"
+#include "inputTimeWork.h"
+#include "inputPrice.h"
+#include "help.h"
+#include "sqlite/sqlite3.h"
 
 namespace computerClub {
 
@@ -34,6 +40,8 @@ namespace computerClub {
 		{
 			save = new Save("Save\\local_save.txt");
 			last_time = new Time(save->TimeStart());
+			end_time = new Time(save->TimeEnd());
+			price = save->Price();
 			type_operation = TypeOperation::CAME;
 			set_theme();
 			InitializeComponent();
@@ -47,6 +55,7 @@ namespace computerClub {
 		~MyForm()
 		{
 			delete last_time;
+			delete end_time;
 			delete theme;
 			delete save;
 			delete lang;
@@ -54,6 +63,7 @@ namespace computerClub {
 			{
 				delete components;
 			}
+			end_time = nullptr;
 			last_time = nullptr;
 			theme = nullptr;
 			save = nullptr;
@@ -99,10 +109,12 @@ namespace computerClub {
 	private: System::Windows::Forms::ToolStripMenuItem^ английскийToolStripMenuItem;
 	private: System::Windows::Forms::Button^ button2;
 	private: Time* last_time;
+	private: Time* end_time;
 	private: TypeOperation type_operation;
 	private: Theme* theme;
 	private: Lang* lang;
 	private: Save* save;
+	private: int price;
 		   /// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
@@ -116,6 +128,7 @@ namespace computerClub {
 		}
 		void updateWindow()
 		{
+			this->textBox2->Text = Conv::ToSystemString(save->Name());
 			this->справкаToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->файлToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->настройкаToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
@@ -681,18 +694,19 @@ namespace computerClub {
 	/*добавление в таблицу*/
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 		Time* tmp_time;
-		try
-		{
-			tmp_time = new Time(Conv::ToStdString(textBox1->Text));
-		}
-		catch (...)
+		const std::regex r(R"((\d)(\d):(\d)(\d))");
+		if (!std::regex_match(Conv::ToStdString(textBox1->Text), r))
 		{
 			MessageBox::Show("неверный формат времени");
 			return;
 		}
-		if (*tmp_time < *last_time)
+		tmp_time = new Time(Conv::ToStdString(textBox1->Text));
+		if (*tmp_time < *last_time || *tmp_time > *end_time)
 		{
-			MessageBox::Show("Время неправильно введено");
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("Время неправильно введено");
 			return;
 		}
 		if (comboBox1->Text != "Пришел" && 
@@ -700,19 +714,28 @@ namespace computerClub {
 			comboBox1->Text != "Сел за компьютер" &&
 			comboBox1->Text != "Ушел")
 		{
-			MessageBox::Show("операция неправильно выбрана");
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("операция неправильно выбрана");
 			return;
 		}
 
 		if (textBox4->Text->Length == 0)
 		{
-			MessageBox::Show("клиент неправильно введен");
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("клиент неправильно введен");
 			return;
 		}
 
 		if (textBox3->Text->Length == 0)
 		{
-			MessageBox::Show("компьютер неправильно введен");
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("компьютер неправильно введен");
 			return;
 		}
 
@@ -722,13 +745,23 @@ namespace computerClub {
 		delete last_time;
 		last_time = tmp_time;
 	}
+	/*справка*/
 	private: System::Void справкаToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		help^ window = gcnew help(theme, save);
+		window->ShowDialog();
 	}
+	/*смена времени работы*/
 	private: System::Void времяРаботыToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-		saveSetting();
+		inputTimeWork^ window = gcnew inputTimeWork(theme, lang, save);
+		window->ShowDialog();
+		last_time = new Time(save->TimeStart());
+		end_time = new Time(save->TimeEnd());
 	}
+	/*смена цены аренды на час*/
 	private: System::Void ценаToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-		saveSetting();
+		inputPrice^ window = gcnew inputPrice(theme, lang, save);
+		window->ShowDialog();
+		price = save->Price();
 	}
 	private: System::Void импротироватьToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
@@ -744,7 +777,7 @@ namespace computerClub {
 	}
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
-		   /*смена на светлую тему*/
+	/*смена на светлую тему*/
 	private: System::Void светлаяToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		delete theme;
 		save->Theme("Save\\light.txt");
@@ -752,7 +785,7 @@ namespace computerClub {
 		updateWindow();
 		saveSetting();
 	}
-		   /*смена на темную тему*/
+	/*смена на темную тему*/
 	private: System::Void темнаяToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		delete theme;
 		save->Theme("Save\\dark.txt");
@@ -760,14 +793,15 @@ namespace computerClub {
 		updateWindow();
 		saveSetting();
 	}
-		   /*вход*/
+	/*вход*/
 	private: System::Void сменитьПрофильToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		saveSetting();
 	}
-		   /*регистрация*/
+	/*регистрация*/
 	private: System::Void регитрацияToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		saveSetting();
 	}
+	/*смена языка на русский*/
 	private: System::Void русскийToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		delete lang;
 		save->Lang("Save\\rus_Rus.txt");
@@ -775,6 +809,7 @@ namespace computerClub {
 		updateWindow();
 		saveSetting();
 	}
+	/*смена язык на английский*/
 	private: System::Void английскийToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		delete lang;
 		save->Lang("Save\\eng_Eng.txt");

@@ -45,6 +45,13 @@ public:
 	std::string SIT;
 	std::string LEAVE;
 
+	std::string error;
+
+	std::string Set;
+	std::string time_start;
+	std::string time_end;
+
+
 	Lang(std::string);
 };
 
