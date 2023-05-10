@@ -1,4 +1,9 @@
 #pragma once
+#include "lang.h"
+#include "theme.h"
+#include "converter.h"
+#include "local_save.h"
+#include <regex>
 
 namespace computerClub {
 
@@ -7,6 +12,8 @@ namespace computerClub {
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
+	using namespace System::Data::Common;
+	using namespace System::Data::SQLite;
 	using namespace System::Drawing;
 
 	/// <summary>
@@ -15,13 +22,18 @@ namespace computerClub {
 	public ref class logup : public System::Windows::Forms::Form
 	{
 	public:
-		logup(void)
+		logup(Theme* theme, Lang* lang, Save* save)
 		{
 			InitializeComponent();
-			//
-			//TODO: добавьте код конструктора
-			//
+			this->theme = theme;
+			this->lang = lang;
+			this->save = save;
+			set_theme();
 		}
+
+		Theme* theme;
+		Lang* lang;
+		Save* save;
 
 	protected:
 		/// <summary>
@@ -33,6 +45,32 @@ namespace computerClub {
 			{
 				delete components;
 			}
+		}
+
+		void set_theme()
+		{
+			button1->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->Border()));
+			label1->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
+			textBox1->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
+
+			label1->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->FormBackGround()));
+			textBox1->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextBackGround()));
+			this->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->FormBackGround()));
+
+			if (save->Lang() != "Save\\rus_Rus.txt")
+			{
+				this->button1->Text = Conv::ToSystemString(lang->nick);
+				this->label1->Text = Conv::ToSystemString(lang->reg);
+			}
+			else
+			{
+				SetRus();
+			}
+		}
+		void SetRus()
+		{
+			this->button1->Text = % String("регистрация");
+			this->label1->Text = % String("никнейм");
 		}
 	private: System::Windows::Forms::TextBox^ textBox1;
 	protected:
@@ -81,6 +119,7 @@ namespace computerClub {
 			this->button1->TabIndex = 3;
 			this->button1->Text = L"button1";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &logup::button1_Click);
 			// 
 			// logup
 			// 
@@ -98,5 +137,37 @@ namespace computerClub {
 
 		}
 #pragma endregion
-	};
+
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+		std::string baseName = "Save\\database.bytes";
+
+		SQLiteConnection^ connection = gcnew SQLiteConnection();
+		connection->ConnectionString = Conv::ToSystemString("Data Source = " + baseName);
+		connection->Open();
+
+		SQLiteCommand^ command = gcnew SQLiteCommand(connection);
+		command->CommandText = Conv::ToSystemString("SELECT id, username FROM Users");
+		command->CommandType = CommandType::Text;
+		SQLiteDataReader^ reader = command->ExecuteReader();
+		while(reader->Read())
+			if (reader->GetString(1) == textBox1->Text)
+			{
+				if (save->Lang() != "Save\\rus_Rus.txt")
+					MessageBox::Show(Conv::ToSystemString(lang->error));
+				else
+					MessageBox::Show("Никнейм занят");
+				return;
+			}
+		reader->Close();
+		command->CommandText = "INSERT INTO Users (username) VALUES('" + textBox1->Text + "')";
+		command->ExecuteNonQuery();
+		save->Name(Conv::ToStdString(textBox1->Text));
+		save->SaveData("Save\\local_save.txt");
+		if (save->Lang() != "Save\\rus_Rus.txt")
+			MessageBox::Show(Conv::ToSystemString(lang->suck));
+		else
+			MessageBox::Show("Успешно зарегестрирован");
+		this->Close();
+	}
+};
 }

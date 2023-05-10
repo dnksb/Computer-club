@@ -47,4 +47,9 @@ Lang::Lang(std::string value)
 	file_source >> Set;
 	file_source >> time_start;
 	file_source >> time_end;
+
+	file_source >> nick;
+	file_source >> reg;
+	file_source >> suck;
+	file_source >> autorez;
 }

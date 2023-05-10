@@ -1,0 +1,10 @@
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.vcxproj.AssemblyReference.cache
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.vcxproj.SuggestedBindingRedirects.cache
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.help.resources
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.inputPrice.resources
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.inputTimeWork.resources
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.login.resources
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.logup.resources
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.MyForm.resources
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.vcxproj.GenerateResource.cache
+C:\Users\danik\С++\computerClub\computerClub\Debug\computerClub.vcxproj.CopyComplete

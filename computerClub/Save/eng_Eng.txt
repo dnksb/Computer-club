@@ -36,3 +36,7 @@ Error_something_wrong
 Set
 Time_start
 Time_end
+Registration
+Nickname:
+Sucsses
+Authorization

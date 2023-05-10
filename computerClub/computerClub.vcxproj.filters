@@ -39,21 +39,6 @@
     <ClCompile Include="lang.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="inputTimeWork.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="inputPrice.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="help.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="login.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="logup.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyForm.h">
@@ -92,9 +77,6 @@
     <ClInclude Include="help.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite\sqlite3.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="login.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
@@ -118,5 +100,11 @@
     <Text Include="Save\rus_Rus.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Save\database.bytes">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

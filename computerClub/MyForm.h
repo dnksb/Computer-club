@@ -19,7 +19,8 @@
 #include "inputTimeWork.h"
 #include "inputPrice.h"
 #include "help.h"
-#include "sqlite/sqlite3.h"
+#include "logup.h"
+#include "login.h"
 
 namespace computerClub {
 
@@ -28,6 +29,7 @@ namespace computerClub {
 	using namespace System::Collections;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
+	using namespace System::Data::SQLite;
 	using namespace System::Drawing;
 
 	/// <summary>
@@ -483,7 +485,7 @@ namespace computerClub {
 					this->òåìíàÿToolStripMenuItem
 			});
 			this->òåìíàÿÒåìàToolStripMenuItem->Name = L"òåìíàÿÒåìàToolStripMenuItem";
-			this->òåìíàÿÒåìàToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->òåìíàÿÒåìàToolStripMenuItem->Size = System::Drawing::Size(102, 22);
 			this->òåìíàÿÒåìàToolStripMenuItem->Text = L"Òåìà";
 			// 
 			// ñâåòëàÿToolStripMenuItem
@@ -507,20 +509,20 @@ namespace computerClub {
 					this->àíãëèéñêèéToolStripMenuItem
 			});
 			this->ñâåòëàÿÒåìàToolStripMenuItem->Name = L"ñâåòëàÿÒåìàToolStripMenuItem";
-			this->ñâåòëàÿÒåìàToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->ñâåòëàÿÒåìàToolStripMenuItem->Size = System::Drawing::Size(102, 22);
 			this->ñâåòëàÿÒåìàToolStripMenuItem->Text = L"ßçûê";
 			// 
 			// ğóññêèéToolStripMenuItem
 			// 
 			this->ğóññêèéToolStripMenuItem->Name = L"ğóññêèéToolStripMenuItem";
-			this->ğóññêèéToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->ğóññêèéToolStripMenuItem->Size = System::Drawing::Size(141, 22);
 			this->ğóññêèéToolStripMenuItem->Text = L"Ğóññêèé";
 			this->ğóññêèéToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::ğóññêèéToolStripMenuItem_Click);
 			// 
 			// àíãëèéñêèéToolStripMenuItem
 			// 
 			this->àíãëèéñêèéToolStripMenuItem->Name = L"àíãëèéñêèéToolStripMenuItem";
-			this->àíãëèéñêèéToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->àíãëèéñêèéToolStripMenuItem->Size = System::Drawing::Size(141, 22);
 			this->àíãëèéñêèéToolStripMenuItem->Text = L"Àíãëèéñêèé";
 			this->àíãëèéñêèéToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::àíãëèéñêèéToolStripMenuItem_Click);
 			// 
@@ -539,7 +541,6 @@ namespace computerClub {
 			this->button1->TabIndex = 2;
 			this->button1->Text = L"Äîáàâèòü îïåğàöèş";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->UseWaitCursor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// label1
@@ -656,7 +657,6 @@ namespace computerClub {
 			this->button2->TabIndex = 16;
 			this->button2->Text = L"Äîáàâèòü îïåğàöèş";
 			this->button2->UseVisualStyleBackColor = true;
-			this->button2->UseWaitCursor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
 			// 
 			// MyForm
@@ -795,10 +795,16 @@ namespace computerClub {
 	}
 	/*âõîä*/
 	private: System::Void ñìåíèòüÏğîôèëüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		login^ window = gcnew login(theme, lang, save);
+		window->ShowDialog();
+		updateWindow();
 		saveSetting();
 	}
 	/*ğåãèñòğàöèÿ*/
 	private: System::Void ğåãèòğàöèÿToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		logup^ window = gcnew logup(theme, lang, save);
+		window->ShowDialog();
+		updateWindow();
 		saveSetting();
 	}
 	/*ñìåíà ÿçûêà íà ğóññêèé*/

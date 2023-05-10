@@ -50,7 +50,11 @@ public:
 	std::string Set;
 	std::string time_start;
 	std::string time_end;
-
+	
+	std::string nick;
+	std::string reg;
+	std::string suck;
+	std::string autorez;
 
 	Lang(std::string);
 };
