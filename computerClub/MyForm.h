@@ -32,6 +32,10 @@ namespace computerClub {
 	using namespace System::Data::SQLite;
 	using namespace System::Drawing;
 
+	std::vector<TableSpace::Table> tables;
+	std::vector<Client> clients;
+	std::queue<Client*> clients_waiting;
+
 	/// <summary>
 	/// Сводка для MyForm
 	/// </summary>
@@ -48,6 +52,8 @@ namespace computerClub {
 			set_theme();
 			InitializeComponent();
 			updateWindow();
+			clients_waiting = std::queue<Client*>();
+			init_tables(save->Tables());
 		}
 
 	protected:
@@ -117,6 +123,7 @@ namespace computerClub {
 	private: Lang* lang;
 	private: Save* save;
 	private: int price;
+	
 		   /// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
@@ -271,7 +278,7 @@ namespace computerClub {
 			this->label1->Text = % String("Время");
 			this->label2->Text = % String("Тип");
 			this->label3->Text = % String("Клиент");
-			this->label4->Text = % String("Компьютер");
+			this->label4->Text = % String("№ Компьютера");
 			this->comboBox1->Text = % String("Пришел");
 			this->label5->Text = % String("Дата");
 			this->label6->Text = % String("Пользователь");
@@ -691,16 +698,251 @@ namespace computerClub {
 
 		}
 #pragma endregion
+	/*количество ждущих клиентов*/
+	private: int amount_waiting_client()
+	{
+		int amount = 0;
+		for (int i = 0; i < clients.size(); i++)
+			if (clients[i].get_waiting())
+				amount++;
+		return amount;
+	}
+	/*есть ли свободный стол*/
+	private: bool one_table_free()
+	{
+		for (int i = 0; i < tables.size(); i++)
+			if (tables[i].get_status())
+				return true;
+		return false;
+	}
+	/*поиск клиента по имени*/
+	private: Client* find_client(String^ client_name)
+	{
+		for (int i = 0; i < clients.size(); i++)
+			if (clients[i].get_name() == Conv::ToStdString(client_name))
+				return&clients[i];
+		return nullptr;
+	}
+	/*инициализация пустых столов*/
+	private: void init_tables(int amount_table)
+	{
+		tables = std::vector<TableSpace::Table>(amount_table);
+		for (int i = 0; i < amount_table; i++)
+		{
+			tables[i] = TableSpace::Table();
+		}
+	}
+	/*если клиент пришел*/
+	private: void client_came(String^ time, String^ client_name)
+	{
+		array<Object^>^ tmp_array = { time, "пришел", client_name, "" };
+
+		Time* tmp_time;
+		
+		const std::regex r(R"((\d)(\d):(\d)(\d))");
+		if (!std::regex_match(Conv::ToStdString(time), r))
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("неверный формат времени");
+			return;
+		}
+		
+		tmp_time = new Time(Conv::ToStdString(textBox1->Text));
+		
+		if (*tmp_time > *end_time)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("Время неправильно введено");
+			return;
+		}
+
+		dataGridView1->Rows->Add(tmp_array);
+		delete last_time;
+		last_time = tmp_time;
+	}
+	/*если клиент сел за компьютер*/
+	private: void client_sat(String^ time, String^ client_name, int num_table)
+	{
+		Client* client = find_client(client_name);
+		if (client == nullptr)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("неизвестный клиент");
+		}
+		else if (!tables[num_table].get_status())
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("место занято");
+		}
+		else
+		{
+			client->set_time(Time(Conv::ToStdString(time)));
+			tables[num_table].set_client(client);
+			client->set_table_num(num_table);
+			
+			array<Object^>^ tmp_array = { time, "сел за компьютер", client_name, Convert::ToString(num_table)};
+
+			Time* tmp_time;
+
+			const std::regex r(R"((\d)(\d):(\d)(\d))");
+			if (!std::regex_match(Conv::ToStdString(time), r))
+			{
+				if (save->Lang() != "Save\\rus_Rus.txt")
+					MessageBox::Show(Conv::ToSystemString(lang->error));
+				else
+					MessageBox::Show("неверный формат времени");
+				return;
+			}
+
+			tmp_time = new Time(Conv::ToStdString(textBox1->Text));
+
+			if (*tmp_time > *end_time)
+			{
+				if (save->Lang() != "Save\\rus_Rus.txt")
+					MessageBox::Show(Conv::ToSystemString(lang->error));
+				else
+					MessageBox::Show("Время неправильно введено");
+				return;
+			}
+
+			dataGridView1->Rows->Add(tmp_array);
+			delete last_time;
+			last_time = tmp_time;
+		}
+	}
+	/*если клиент встал в очередь*/
+	private: void client_wait(String^ time, String^ client_name)
+	{
+		if (one_table_free())
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("клиент не может так долго ждать");
+			return;
+		}
+		else if (amount_waiting_client() > save->Tables())
+		{
+			array<Object^>^ tmp_array = { time, "ушел", client_name, ""};
+
+			Time* tmp_time;
+
+			const std::regex r(R"((\d)(\d):(\d)(\d))");
+			if (!std::regex_match(Conv::ToStdString(time), r))
+			{
+				if (save->Lang() != "Save\\rus_Rus.txt")
+					MessageBox::Show(Conv::ToSystemString(lang->error));
+				else
+					MessageBox::Show("неверный формат времени");
+				return;
+			}
+
+			tmp_time = new Time(Conv::ToStdString(textBox1->Text));
+
+			if (*tmp_time > *end_time)
+			{
+				if (save->Lang() != "Save\\rus_Rus.txt")
+					MessageBox::Show(Conv::ToSystemString(lang->error));
+				else
+					MessageBox::Show("Время неправильно введено");
+				return;
+			}
+
+			dataGridView1->Rows->Add(tmp_array);
+			delete last_time;
+			last_time = tmp_time;
+			return;
+		}
+		else
+		{
+			clients_waiting.push(find_client(client_name));
+		}
+	}
+	/*если клиент ушел*/
+	private: void client_left(std::string time, std::string client_name)
+	{
+		auto client = find_client(client_name);
+		if (client == nullptr)
+			report << time + " 13 ClientUnknown\n";
+		else
+		{
+			std::cout << client->get_time().output() << std::endl;
+			std::cout << Time(time).output() << std::endl;
+			int num_table = client->get_table_num();
+			tables[num_table].left_client(Time(time), client->get_time());
+			decrease_queue(time, num_table);
+		}
+	}
+	/*интерпретатор полученой из файла строки*/
+	private: void interpreter(std::string line)
+	{
+		auto commands = Conv::ToSystemString(line)->Split(' ');
+		if (commands->Length != 3 && commands->Length != 4)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("неверная запись в файле");
+			return;
+		}
+
+		auto time = commands[0];
+		auto num_operation = Convert::ToInt32(commands[1]);
+		auto client_name = commands[2];
+
+		if (Time(Conv::ToStdString(time)) < *last_time)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("неверное время операции");
+			return;
+		}
+
+		switch (num_operation)
+		{
+		case 1:
+			client_came(time, client_name);
+			break;
+		case 2:
+			client_sat(time, client_name, Convert::ToInt32(commands[3]));
+			break;
+		case 3:
+			client_wait(time, client_name);
+			break;
+		case 4:
+			client_left(time, client_name);
+			break;
+		default:
+			break;
+		}
+
+		delete commands;
+	}
 	/*добавление в таблицу*/
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 		Time* tmp_time;
+		
 		const std::regex r(R"((\d)(\d):(\d)(\d))");
 		if (!std::regex_match(Conv::ToStdString(textBox1->Text), r))
 		{
-			MessageBox::Show("неверный формат времени");
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("неверный формат времени");
 			return;
 		}
+		
 		tmp_time = new Time(Conv::ToStdString(textBox1->Text));
+		
 		if (*tmp_time < *last_time || *tmp_time > *end_time)
 		{
 			if (save->Lang() != "Save\\rus_Rus.txt")
@@ -709,6 +951,7 @@ namespace computerClub {
 				MessageBox::Show("Время неправильно введено");
 			return;
 		}
+		
 		if (comboBox1->Text != "Пришел" && 
 			comboBox1->Text != "Встал в очередь" &&
 			comboBox1->Text != "Сел за компьютер" &&
@@ -745,6 +988,18 @@ namespace computerClub {
 		delete last_time;
 		last_time = tmp_time;
 	}
+	private: void time_off()
+	{
+		for (int i = 0; i < tables.size(); i++)
+			if (!tables[i].get_status())
+			{
+				auto client = tables[i].get_client();
+				std::cout << client->get_time().output() << std::endl;
+				array<Object^>^ tmp_array = { Conv::ToSystemString(end_time->output()), "ушел", Conv::ToSystemString(client->get_name()), ""};
+				dataGridView1->Rows->Add(tmp_array);
+				tables[i].left_client(*end_time);
+			}
+	}
 	/*справка*/
 	private: System::Void справкаToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		help^ window = gcnew help(theme, save);
@@ -764,6 +1019,71 @@ namespace computerClub {
 		price = save->Price();
 	}
 	private: System::Void импротироватьToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		OpenFileDialog^ file = gcnew OpenFileDialog();
+		file->Filter = "txt files (*.txt)|*.txt";
+		file->ShowDialog();
+		
+		std::ifstream import_file = std::ifstream(Conv::ToStdString(file->FileName));
+		if (!import_file.is_open())
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("файл не удалось открыть");
+			return;
+		}
+
+		try
+		{
+			int tmp;
+			import_file >> tmp;
+			save->Tables(tmp);
+			std::string time = "";
+			
+			import_file >> time;
+			save->TimeStart(time);
+			last_time->set_time(time);
+			
+			import_file >> time;
+			save->TimeEnd(time);
+			end_time->set_time(time);
+			
+			import_file >> tmp;
+			save->Price(tmp);
+			price = tmp;
+		}
+		catch (std::exception ex)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("неверный формат файла");
+			return;
+		}
+
+		init_tables(save->Tables());
+
+		try
+		{
+			std::string line = "";
+			while (!import_file.eof())
+			{
+				std::getline(import_file, line);
+				std::cout << line << std::endl;
+				interpreter(line);
+			}
+		}
+		catch (std::exception ex)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("ошибка");
+			return;
+		}
+
+		time_off();
+
 	}
 	private: System::Void сохранитьToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	}

@@ -15,6 +15,8 @@ class Save
 	int price;
 	std::string time_start;
 	std::string time_end;
+	int tables;
+
 public:
 	Save(std::string);
 	~Save();
@@ -26,6 +28,7 @@ public:
 	int Price();
 	std::string TimeStart();
 	std::string TimeEnd();
+	int Tables();
 
 	void Name(std::string);
 	void Lang(std::string);
@@ -33,6 +36,7 @@ public:
 	void Price(int);
 	void TimeStart(std::string);
 	void TimeEnd(std::string);
+	void Tables(int);
 };
 
 #endif // !LOCALSAVE
