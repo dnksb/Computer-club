@@ -1,3 +1,7 @@
 ﻿  MyForm.cpp
+C:\Users\danik\С++\computerClub\computerClub\MyForm.h(718,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\danik\С++\computerClub\computerClub\MyForm.h(726,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\danik\С++\computerClub\computerClub\MyForm.h(734,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\danik\С++\computerClub\computerClub\MyForm.h(1026,21): warning C4018: <: несоответствие типов со знаком и без знака
   client.obj : обнаружен модуль MSIL; для MSIL последовательная компоновка отключена; выполняется полная компоновка
   computerClub.vcxproj -> C:\Users\danik\С++\computerClub\Debug\computerClub.exe

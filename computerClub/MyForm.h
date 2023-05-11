@@ -33,7 +33,7 @@ namespace computerClub {
 	using namespace System::Drawing;
 
 	std::vector<TableSpace::Table> tables;
-	std::vector<Client> clients;
+	std::vector<Client*> clients;
 	std::queue<Client*> clients_waiting;
 
 	/// <summary>
@@ -412,28 +412,28 @@ namespace computerClub {
 			// èìïğîòèğîâàòüToolStripMenuItem
 			// 
 			this->èìïğîòèğîâàòüToolStripMenuItem->Name = L"èìïğîòèğîâàòüToolStripMenuItem";
-			this->èìïğîòèğîâàòüToolStripMenuItem->Size = System::Drawing::Size(163, 22);
+			this->èìïğîòèğîâàòüToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->èìïğîòèğîâàòüToolStripMenuItem->Text = L"Èìïîğòèğîâàòü";
 			this->èìïğîòèğîâàòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::èìïğîòèğîâàòüToolStripMenuItem_Click);
 			// 
 			// ıêñïîğòèğîâàòüToolStripMenuItem
 			// 
 			this->ıêñïîğòèğîâàòüToolStripMenuItem->Name = L"ıêñïîğòèğîâàòüToolStripMenuItem";
-			this->ıêñïîğòèğîâàòüToolStripMenuItem->Size = System::Drawing::Size(163, 22);
+			this->ıêñïîğòèğîâàòüToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->ıêñïîğòèğîâàòüToolStripMenuItem->Text = L"İêñïîğòèğîâàòü";
 			this->ıêñïîğòèğîâàòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::ıêñïîğòèğîâàòüToolStripMenuItem_Click);
 			// 
 			// ñîõğàíèòüToolStripMenuItem
 			// 
 			this->ñîõğàíèòüToolStripMenuItem->Name = L"ñîõğàíèòüToolStripMenuItem";
-			this->ñîõğàíèòüToolStripMenuItem->Size = System::Drawing::Size(163, 22);
+			this->ñîõğàíèòüToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->ñîõğàíèòüToolStripMenuItem->Text = L"Ñîõğàíèòü";
 			this->ñîõğàíèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::ñîõğàíèòüToolStripMenuItem_Click);
 			// 
 			// îò÷åòToolStripMenuItem
 			// 
 			this->îò÷åòToolStripMenuItem->Name = L"îò÷åòToolStripMenuItem";
-			this->îò÷åòToolStripMenuItem->Size = System::Drawing::Size(163, 22);
+			this->îò÷åòToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->îò÷åòToolStripMenuItem->Text = L"Îò÷åò";
 			this->îò÷åòToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::îò÷åòToolStripMenuItem_Click);
 			// 
@@ -603,7 +603,7 @@ namespace computerClub {
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(401, 137);
+			this->label4->Location = System::Drawing::Point(389, 140);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(68, 13);
 			this->label4->TabIndex = 9;
@@ -698,12 +698,25 @@ namespace computerClub {
 
 		}
 #pragma endregion
+	/*÷åëîâåê âûøåë èç î÷åğåäè*/
+	private: void decrease_queue(String^ time, int num_table)
+	{
+		Client* client;
+		if (clients_waiting.size() != 0)
+			client = clients_waiting.front();
+		else return;
+		if (client != nullptr)
+		{
+			client_sat(time, Conv::ToSystemString(client->get_name()), num_table);
+			clients_waiting.pop();
+		}
+	}
 	/*êîëè÷åñòâî æäóùèõ êëèåíòîâ*/
 	private: int amount_waiting_client()
 	{
 		int amount = 0;
 		for (int i = 0; i < clients.size(); i++)
-			if (clients[i].get_waiting())
+			if (clients[i]->get_waiting())
 				amount++;
 		return amount;
 	}
@@ -719,13 +732,14 @@ namespace computerClub {
 	private: Client* find_client(String^ client_name)
 	{
 		for (int i = 0; i < clients.size(); i++)
-			if (clients[i].get_name() == Conv::ToStdString(client_name))
-				return&clients[i];
+			if (clients[i]->get_name() == Conv::ToStdString(client_name))
+				return clients[i];
 		return nullptr;
 	}
 	/*èíèöèàëèçàöèÿ ïóñòûõ ñòîëîâ*/
 	private: void init_tables(int amount_table)
 	{
+		tables.clear();
 		tables = std::vector<TableSpace::Table>(amount_table);
 		for (int i = 0; i < amount_table; i++)
 		{
@@ -749,7 +763,7 @@ namespace computerClub {
 			return;
 		}
 		
-		tmp_time = new Time(Conv::ToStdString(textBox1->Text));
+		tmp_time = new Time(Conv::ToStdString(time));
 		
 		if (*tmp_time > *end_time)
 		{
@@ -763,6 +777,7 @@ namespace computerClub {
 		dataGridView1->Rows->Add(tmp_array);
 		delete last_time;
 		last_time = tmp_time;
+		clients.insert(clients.end(), new Client(Time(Conv::ToStdString(time)), Conv::ToStdString(client_name)));
 	}
 	/*åñëè êëèåíò ñåë çà êîìïüşòåğ*/
 	private: void client_sat(String^ time, String^ client_name, int num_table)
@@ -774,6 +789,7 @@ namespace computerClub {
 				MessageBox::Show(Conv::ToSystemString(lang->error));
 			else
 				MessageBox::Show("íåèçâåñòíûé êëèåíò");
+			return;
 		}
 		else if (!tables[num_table].get_status())
 		{
@@ -781,6 +797,7 @@ namespace computerClub {
 				MessageBox::Show(Conv::ToSystemString(lang->error));
 			else
 				MessageBox::Show("ìåñòî çàíÿòî");
+			return;
 		}
 		else
 		{
@@ -788,7 +805,7 @@ namespace computerClub {
 			tables[num_table].set_client(client);
 			client->set_table_num(num_table);
 			
-			array<Object^>^ tmp_array = { time, "ñåë çà êîìïüşòåğ", client_name, Convert::ToString(num_table)};
+			array<Object^>^ tmp_array = { time, "ñåë çà êîìïüşòåğ", client_name, Convert::ToString(num_table + 1)};
 
 			Time* tmp_time;
 
@@ -802,7 +819,7 @@ namespace computerClub {
 				return;
 			}
 
-			tmp_time = new Time(Conv::ToStdString(textBox1->Text));
+			tmp_time = new Time(Conv::ToStdString(time));
 
 			if (*tmp_time > *end_time)
 			{
@@ -831,7 +848,11 @@ namespace computerClub {
 		}
 		else if (amount_waiting_client() > save->Tables())
 		{
-			array<Object^>^ tmp_array = { time, "óøåë", client_name, ""};
+			return;
+		}
+		else
+		{
+			array<Object^>^ tmp_array = { time, "âñòàë â î÷åğåäü", client_name, ""};
 
 			Time* tmp_time;
 
@@ -845,7 +866,7 @@ namespace computerClub {
 				return;
 			}
 
-			tmp_time = new Time(Conv::ToStdString(textBox1->Text));
+			tmp_time = new Time(Conv::ToStdString(time));
 
 			if (*tmp_time > *end_time)
 			{
@@ -859,25 +880,36 @@ namespace computerClub {
 			dataGridView1->Rows->Add(tmp_array);
 			delete last_time;
 			last_time = tmp_time;
-			return;
-		}
-		else
-		{
+
 			clients_waiting.push(find_client(client_name));
 		}
 	}
 	/*åñëè êëèåíò óøåë*/
-	private: void client_left(std::string time, std::string client_name)
+	private: void client_left(String^ time, String^ client_name)
 	{
 		auto client = find_client(client_name);
 		if (client == nullptr)
-			report << time + " 13 ClientUnknown\n";
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("íåèçâåñòíûé êëèåíò");
+		}
 		else
 		{
 			std::cout << client->get_time().output() << std::endl;
-			std::cout << Time(time).output() << std::endl;
+			std::cout << Time(Conv::ToStdString(time)).output() << std::endl;
 			int num_table = client->get_table_num();
-			tables[num_table].left_client(Time(time), client->get_time());
+			tables[num_table].left_client(Conv::ToStdString(time), client->get_time());
+			
+			array<Object^>^ tmp_array = { time, "óøåë", client_name, "" };
+			dataGridView1->Rows->Add(tmp_array);
+			
+			Time* tmp_time;
+			tmp_time = new Time(Conv::ToStdString(time));
+			delete last_time;
+			last_time = tmp_time;
+			
 			decrease_queue(time, num_table);
 		}
 	}
@@ -913,7 +945,7 @@ namespace computerClub {
 			client_came(time, client_name);
 			break;
 		case 2:
-			client_sat(time, client_name, Convert::ToInt32(commands[3]));
+			client_sat(time, client_name, Convert::ToInt32(commands[3]) - 1);
 			break;
 		case 3:
 			client_wait(time, client_name);
@@ -973,7 +1005,9 @@ namespace computerClub {
 			return;
 		}
 
-		if (textBox3->Text->Length == 0)
+
+		const std::regex r1(R"((\d)+)");
+		if (!std::regex_match(Conv::ToStdString(textBox3->Text), r))
 		{
 			if (save->Lang() != "Save\\rus_Rus.txt")
 				MessageBox::Show(Conv::ToSystemString(lang->error));
@@ -988,6 +1022,7 @@ namespace computerClub {
 		delete last_time;
 		last_time = tmp_time;
 	}
+	/*âûçûâàåòñÿ ïğè çàâåğøåíèè ğàáî÷åãî äíÿ*/
 	private: void time_off()
 	{
 		for (int i = 0; i < tables.size(); i++)
@@ -998,7 +1033,16 @@ namespace computerClub {
 				array<Object^>^ tmp_array = { Conv::ToSystemString(end_time->output()), "óøåë", Conv::ToSystemString(client->get_name()), ""};
 				dataGridView1->Rows->Add(tmp_array);
 				tables[i].left_client(*end_time);
+				delete client;
 			}
+		while (clients_waiting.size() > 0)
+		{
+			auto client = clients_waiting.front();
+			array<Object^>^ tmp_array = { Conv::ToSystemString(end_time->output()), "óøåë", Conv::ToSystemString(client->get_name()), "" };
+			dataGridView1->Rows->Add(tmp_array);
+			delete client;
+			clients_waiting.pop();
+		}
 	}
 	/*ñïğàâêà*/
 	private: System::Void ñïğàâêàToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -1018,37 +1062,31 @@ namespace computerClub {
 		window->ShowDialog();
 		price = save->Price();
 	}
+	/*èìïîğò äàííûõ èç ôàéëà*/
 	private: System::Void èìïğîòèğîâàòüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		OpenFileDialog^ file = gcnew OpenFileDialog();
 		file->Filter = "txt files (*.txt)|*.txt";
 		file->ShowDialog();
-		
-		std::ifstream import_file = std::ifstream(Conv::ToStdString(file->FileName));
-		if (!import_file.is_open())
-		{
-			if (save->Lang() != "Save\\rus_Rus.txt")
-				MessageBox::Show(Conv::ToSystemString(lang->error));
-			else
-				MessageBox::Show("ôàéë íå óäàëîñü îòêğûòü");
-			return;
-		}
+		auto lines = IO::File::ReadAllLines(file->FileName);
+
+		clients = std::vector<Client*>(0);
 
 		try
 		{
 			int tmp;
-			import_file >> tmp;
+			tmp = Convert::ToInt32(lines[0]);
 			save->Tables(tmp);
 			std::string time = "";
 			
-			import_file >> time;
+			time = Conv::ToStdString(lines[1]->Split()[0]);
 			save->TimeStart(time);
 			last_time->set_time(time);
 			
-			import_file >> time;
+			time = Conv::ToStdString(lines[1]->Split()[1]);
 			save->TimeEnd(time);
 			end_time->set_time(time);
 			
-			import_file >> tmp;
+			tmp = Convert::ToInt32(lines[2]);
 			save->Price(tmp);
 			price = tmp;
 		}
@@ -1063,14 +1101,14 @@ namespace computerClub {
 
 		init_tables(save->Tables());
 
+		this->dataGridView1->Rows->Clear();
+
 		try
 		{
 			std::string line = "";
-			while (!import_file.eof())
+			for(int i = 3; i < lines->Length; i++)
 			{
-				std::getline(import_file, line);
-				std::cout << line << std::endl;
-				interpreter(line);
+				interpreter(Conv::ToStdString(lines[i]));
 			}
 		}
 		catch (std::exception ex)
@@ -1083,13 +1121,15 @@ namespace computerClub {
 		}
 
 		time_off();
-
+		clients.clear();
 	}
 	private: System::Void ñîõğàíèòüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void îò÷åòToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+	/*ôóíêöèÿ ïî çàâåğøåíèş äíÿ ğàáîòû*/
 	private: System::Void çàêîí÷èòüÄåíüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		time_off();
 	}
 	private: System::Void ıêñïîğòèğîâàòüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
