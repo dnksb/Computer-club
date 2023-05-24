@@ -23,6 +23,7 @@ public:
 	std::string theme;
 	std::string light;
 	std::string dark;
+	std::string patr;
 	std::string help;
 	std::string view;
 

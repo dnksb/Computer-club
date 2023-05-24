@@ -20,6 +20,7 @@ Lang::Lang(std::string value)
 	file_source >> theme;
 	file_source >> light;
 	file_source >> dark;
+	file_source >> patr;
 	file_source >> help;
 	file_source >> view;
 

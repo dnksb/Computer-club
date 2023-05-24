@@ -188,6 +188,7 @@
     <Text Include="Save\eng_Eng.txt" />
     <Text Include="Save\light.txt" />
     <Text Include="Save\local_save.txt" />
+    <Text Include="Save\patriotic.txt" />
     <Text Include="Save\rus_Rus.txt" />
   </ItemGroup>
   <ItemGroup>

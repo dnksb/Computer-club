@@ -1,8 +1,7 @@
 admin
-Save\light.txt
+Save\patriotic.txt
 Save\rus_Rus.txt
-5
+10
 06:00
-18:00
+19:00
 3
-

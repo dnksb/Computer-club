@@ -24,6 +24,11 @@ namespace TableSpace
         return this->cof;
     }
 
+    int Table::get_num() const
+    {
+        return this->num;
+    }
+
     void Table::set_client(Client* client)
     {
         this->status = false;
@@ -50,6 +55,11 @@ namespace TableSpace
     void Table::set_status(bool status)
     {
         this->status = status;
+    }
+
+    void Table::set_num(int num)
+    {
+        this->num = num;
     }
 
     Time Table::get_time() const

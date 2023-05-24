@@ -2,7 +2,7 @@ File
 Import
 Export
 Save
-Report
+Day_resault
 Settings
 Language
 Russian
@@ -14,6 +14,7 @@ Registration
 Theme
 Light
 Dark
+Patriotic
 Help
 View
 Time

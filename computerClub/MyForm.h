@@ -6,6 +6,7 @@
 #include <string.h>
 #include <vector>
 #include <queue>
+#include <map>
 #include <winsqlite/winsqlite3.h>
 
 #include "./table/table.hpp"
@@ -123,7 +124,8 @@ namespace computerClub {
 	private: Lang* lang;
 	private: Save* save;
 	private: int price;
-	
+	private: System::Windows::Forms::ToolStripMenuItem^ ïàòğèàòè÷íàÿToolStripMenuItem;
+
 		   /// <summary>
 		/// Îáÿçàòåëüíàÿ ïåğåìåííàÿ êîíñòğóêòîğà.
 		/// </summary>
@@ -153,6 +155,7 @@ namespace computerClub {
 			this->ğåãèòğàöèÿToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->òåìíàÿÒåìàToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->ñâåòëàÿToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
+			this->ïàòğèàòè÷íàÿToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->òåìíàÿToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->ñâåòëàÿÒåìàToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
 			this->ğóññêèéToolStripMenuItem->ForeColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->TextColor()));
@@ -190,6 +193,7 @@ namespace computerClub {
 			this->ñâåòëàÿToolStripMenuItem->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->MenuBackGround()));
 			this->òåìíàÿToolStripMenuItem->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->MenuBackGround()));
 			this->ñâåòëàÿÒåìàToolStripMenuItem->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->MenuBackGround()));
+			this->ïàòğèàòè÷íàÿToolStripMenuItem->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->MenuBackGround()));
 			this->ğóññêèéToolStripMenuItem->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->MenuBackGround()));
 			this->àíãëèéñêèéToolStripMenuItem->BackColor = System::Drawing::Color::FromName(Conv::ToSystemString(theme->MenuBackGround()));
 
@@ -222,6 +226,7 @@ namespace computerClub {
 				this->òåìíàÿÒåìàToolStripMenuItem->Text = Conv::ToSystemString(lang->theme);
 				this->ñâåòëàÿToolStripMenuItem->Text = Conv::ToSystemString(lang->light);
 				this->òåìíàÿToolStripMenuItem->Text = Conv::ToSystemString(lang->dark);
+				this->ïàòğèàòè÷íàÿToolStripMenuItem->Text = Conv::ToSystemString(lang->patr);
 				this->ñâåòëàÿÒåìàToolStripMenuItem->Text = Conv::ToSystemString(lang->lang);
 				this->ğóññêèéToolStripMenuItem->Text = Conv::ToSystemString(lang->rus);
 				this->àíãëèéñêèéToolStripMenuItem->Text = Conv::ToSystemString(lang->eng);
@@ -260,7 +265,7 @@ namespace computerClub {
 			this->èìïğîòèğîâàòüToolStripMenuItem->Text = % String("Èìïîğòèğîâàòü");
 			this->ıêñïîğòèğîâàòüToolStripMenuItem->Text = % String("İêñïîğòèğîâàòü");
 			this->ñîõğàíèòüToolStripMenuItem->Text = % String("Ñîõğàíèòü");
-			this->îò÷åòToolStripMenuItem->Text = % String("Îò÷åò");
+			this->îò÷åòToolStripMenuItem->Text = % String("Ğåçóëüòàòû äíÿ");
 			this->íàñòğîéêàToolStripMenuItem->Text = % String("Íàñòğîéêè");
 			this->âğåìÿĞàáîòûToolStripMenuItem->Text = % String("Âğåìÿ ğàáîòû");
 			this->öåíàToolStripMenuItem->Text = % String("Öåíà");
@@ -274,6 +279,7 @@ namespace computerClub {
 			this->ğóññêèéToolStripMenuItem->Text = % String("Ğóññêèé");
 			this->àíãëèéñêèéToolStripMenuItem->Text = % String("Àíãëèéñêèé");
 			this->ñïğàâêàToolStripMenuItem->Text = % String("Ñïğàâêà");
+			this->ïàòğèàòè÷íàÿToolStripMenuItem->Text = % String("Ïàòğèàòè÷íàÿ");
 			this->button1->Text = % String("Äîáàâèòü çàïèñü");
 			this->label1->Text = % String("Âğåìÿ");
 			this->label2->Text = % String("Òèï");
@@ -321,6 +327,7 @@ namespace computerClub {
 			this->òåìíàÿÒåìàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ñâåòëàÿToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->òåìíàÿToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ïàòğèàòè÷íàÿToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ñâåòëàÿÒåìàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ğóññêèéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->àíãëèéñêèéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -434,7 +441,7 @@ namespace computerClub {
 			// 
 			this->îò÷åòToolStripMenuItem->Name = L"îò÷åòToolStripMenuItem";
 			this->îò÷åòToolStripMenuItem->Size = System::Drawing::Size(180, 22);
-			this->îò÷åòToolStripMenuItem->Text = L"Îò÷åò";
+			this->îò÷åòToolStripMenuItem->Text = L"Ğåçóëüòàòû äíÿ";
 			this->îò÷åòToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::îò÷åòToolStripMenuItem_Click);
 			// 
 			// íàñòğîéêàToolStripMenuItem
@@ -487,9 +494,9 @@ namespace computerClub {
 			// 
 			// òåìíàÿÒåìàToolStripMenuItem
 			// 
-			this->òåìíàÿÒåìàToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+			this->òåìíàÿÒåìàToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->ñâåòëàÿToolStripMenuItem,
-					this->òåìíàÿToolStripMenuItem
+					this->òåìíàÿToolStripMenuItem, this->ïàòğèàòè÷íàÿToolStripMenuItem
 			});
 			this->òåìíàÿÒåìàToolStripMenuItem->Name = L"òåìíàÿÒåìàToolStripMenuItem";
 			this->òåìíàÿÒåìàToolStripMenuItem->Size = System::Drawing::Size(102, 22);
@@ -498,16 +505,23 @@ namespace computerClub {
 			// ñâåòëàÿToolStripMenuItem
 			// 
 			this->ñâåòëàÿToolStripMenuItem->Name = L"ñâåòëàÿToolStripMenuItem";
-			this->ñâåòëàÿToolStripMenuItem->Size = System::Drawing::Size(118, 22);
+			this->ñâåòëàÿToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->ñâåòëàÿToolStripMenuItem->Text = L"Ñâåòëàÿ";
 			this->ñâåòëàÿToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::ñâåòëàÿToolStripMenuItem_Click);
 			// 
 			// òåìíàÿToolStripMenuItem
 			// 
 			this->òåìíàÿToolStripMenuItem->Name = L"òåìíàÿToolStripMenuItem";
-			this->òåìíàÿToolStripMenuItem->Size = System::Drawing::Size(118, 22);
+			this->òåìíàÿToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->òåìíàÿToolStripMenuItem->Text = L"Òåìíàÿ";
 			this->òåìíàÿToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::òåìíàÿToolStripMenuItem_Click);
+			// 
+			// ïàòğèàòè÷íàÿToolStripMenuItem
+			// 
+			this->ïàòğèàòè÷íàÿToolStripMenuItem->Name = L"ïàòğèàòè÷íàÿToolStripMenuItem";
+			this->ïàòğèàòè÷íàÿToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->ïàòğèàòè÷íàÿToolStripMenuItem->Text = L"Ïàòğèàòè÷íàÿ";
+			this->ïàòğèàòè÷íàÿToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::ïàòğèàòè÷íàÿToolStripMenuItem_Click);
 			// 
 			// ñâåòëàÿÒåìàToolStripMenuItem
 			// 
@@ -614,14 +628,14 @@ namespace computerClub {
 			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::System;
 			this->comboBox1->FormattingEnabled = true;
 			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(4) {
-				L"ïğèøåë", L"âñòàë â î÷åğåäü", L"ñåë çà êîìïüşòåğ",
-					L"óøåë"
+				L"Ïğèøåë", L"Âñòàë â î÷åğåäü", L"Ñåë çà êîìïüşòåğ",
+					L"Óøåë"
 			});
 			this->comboBox1->Location = System::Drawing::Point(475, 81);
 			this->comboBox1->Name = L"comboBox1";
 			this->comboBox1->Size = System::Drawing::Size(111, 21);
 			this->comboBox1->TabIndex = 11;
-			this->comboBox1->Text = L"ïğèøåë";
+			this->comboBox1->Text = L"Ïğèøåë";
 			// 
 			// label5
 			// 
@@ -638,6 +652,7 @@ namespace computerClub {
 			this->dateTimePicker1->Name = L"dateTimePicker1";
 			this->dateTimePicker1->Size = System::Drawing::Size(200, 20);
 			this->dateTimePicker1->TabIndex = 13;
+			this->dateTimePicker1->Value = System::DateTime(2023, 5, 15, 0, 0, 0, 0);
 			this->dateTimePicker1->ValueChanged += gcnew System::EventHandler(this, &MyForm::dateTimePicker1_ValueChanged);
 			// 
 			// textBox2
@@ -670,6 +685,7 @@ namespace computerClub {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->BackColor = System::Drawing::Color::LightCoral;
 			this->ClientSize = System::Drawing::Size(597, 222);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->textBox2);
@@ -688,6 +704,8 @@ namespace computerClub {
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->menuStrip1);
 			this->MainMenuStrip = this->menuStrip1;
+			this->MaximumSize = System::Drawing::Size(613, 261);
+			this->MinimumSize = System::Drawing::Size(613, 261);
 			this->Name = L"MyForm";
 			this->Text = L"Êîìüşòåğíûé êëóá";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
@@ -698,6 +716,7 @@ namespace computerClub {
 
 		}
 #pragma endregion
+	private: bool clear_space = true;
 	/*÷åëîâåê âûøåë èç î÷åğåäè*/
 	private: void decrease_queue(String^ time, int num_table)
 	{
@@ -744,12 +763,13 @@ namespace computerClub {
 		for (int i = 0; i < amount_table; i++)
 		{
 			tables[i] = TableSpace::Table();
+			tables[i].set_num(i);
 		}
 	}
-	/*åñëè êëèåíò ïğèøåë*/
+	/*åñëè êëèåíò Ïğèøåë*/
 	private: void client_came(String^ time, String^ client_name)
 	{
-		array<Object^>^ tmp_array = { time, "ïğèøåë", client_name, "" };
+		array<Object^>^ tmp_array = { time, "Ïğèøåë", client_name, "" };
 
 		Time* tmp_time;
 		
@@ -779,7 +799,7 @@ namespace computerClub {
 		last_time = tmp_time;
 		clients.insert(clients.end(), new Client(Time(Conv::ToStdString(time)), Conv::ToStdString(client_name)));
 	}
-	/*åñëè êëèåíò ñåë çà êîìïüşòåğ*/
+	/*åñëè êëèåíò Ñåë çà êîìïüşòåğ*/
 	private: void client_sat(String^ time, String^ client_name, int num_table)
 	{
 		Client* client = find_client(client_name);
@@ -789,6 +809,14 @@ namespace computerClub {
 				MessageBox::Show(Conv::ToSystemString(lang->error));
 			else
 				MessageBox::Show("íåèçâåñòíûé êëèåíò");
+			return;
+		}
+		else if (num_table >= save->Tables())
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("òàêîãî êîìïüşòåğà íåò");
 			return;
 		}
 		else if (!tables[num_table].get_status())
@@ -805,7 +833,7 @@ namespace computerClub {
 			tables[num_table].set_client(client);
 			client->set_table_num(num_table);
 			
-			array<Object^>^ tmp_array = { time, "ñåë çà êîìïüşòåğ", client_name, Convert::ToString(num_table + 1)};
+			array<Object^>^ tmp_array = { time, "Ñåë çà êîìïüşòåğ", client_name, Convert::ToString(num_table + 1)};
 
 			Time* tmp_time;
 
@@ -835,7 +863,7 @@ namespace computerClub {
 			last_time = tmp_time;
 		}
 	}
-	/*åñëè êëèåíò âñòàë â î÷åğåäü*/
+	/*åñëè êëèåíò Âñòàë â î÷åğåäü*/
 	private: void client_wait(String^ time, String^ client_name)
 	{
 		if (one_table_free())
@@ -852,7 +880,7 @@ namespace computerClub {
 		}
 		else
 		{
-			array<Object^>^ tmp_array = { time, "âñòàë â î÷åğåäü", client_name, ""};
+			array<Object^>^ tmp_array = { time, "Âñòàë â î÷åğåäü", client_name, ""};
 
 			Time* tmp_time;
 
@@ -884,7 +912,7 @@ namespace computerClub {
 			clients_waiting.push(find_client(client_name));
 		}
 	}
-	/*åñëè êëèåíò óøåë*/
+	/*åñëè êëèåíò Óøåë*/
 	private: void client_left(String^ time, String^ client_name)
 	{
 		auto client = find_client(client_name);
@@ -897,12 +925,10 @@ namespace computerClub {
 		}
 		else
 		{
-			std::cout << client->get_time().output() << std::endl;
-			std::cout << Time(Conv::ToStdString(time)).output() << std::endl;
 			int num_table = client->get_table_num();
 			tables[num_table].left_client(Conv::ToStdString(time), client->get_time());
 			
-			array<Object^>^ tmp_array = { time, "óøåë", client_name, "" };
+			array<Object^>^ tmp_array = { time, "Óøåë", client_name, "" };
 			dataGridView1->Rows->Add(tmp_array);
 			
 			Time* tmp_time;
@@ -914,9 +940,9 @@ namespace computerClub {
 		}
 	}
 	/*èíòåğïğåòàòîğ ïîëó÷åíîé èç ôàéëà ñòğîêè*/
-	private: void interpreter(std::string line)
+	private: void interpreter(String^ line)
 	{
-		auto commands = Conv::ToSystemString(line)->Split(' ');
+		auto commands = line->Split(' ');
 		if (commands->Length != 3 && commands->Length != 4)
 		{
 			if (save->Lang() != "Save\\rus_Rus.txt")
@@ -962,6 +988,13 @@ namespace computerClub {
 	/*äîáàâëåíèå â òàáëèöó*/
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 		Time* tmp_time;
+
+		if (clear_space)
+		{
+			this->dataGridView1->Rows->Clear();
+			clear_space = false;
+			init_tables(save->Tables());
+		}
 		
 		const std::regex r(R"((\d)(\d):(\d)(\d))");
 		if (!std::regex_match(Conv::ToStdString(textBox1->Text), r))
@@ -987,7 +1020,11 @@ namespace computerClub {
 		if (comboBox1->Text != "Ïğèøåë" && 
 			comboBox1->Text != "Âñòàë â î÷åğåäü" &&
 			comboBox1->Text != "Ñåë çà êîìïüşòåğ" &&
-			comboBox1->Text != "Óøåë")
+			comboBox1->Text != "Óøåë" &&
+			comboBox1->Text != "Gone" &&
+			comboBox1->Text != "Waiting" &&
+			comboBox1->Text != "Village" &&
+			comboBox1->Text != "Came")
 		{
 			if (save->Lang() != "Save\\rus_Rus.txt")
 				MessageBox::Show(Conv::ToSystemString(lang->error));
@@ -1007,7 +1044,15 @@ namespace computerClub {
 
 
 		const std::regex r1(R"((\d)+)");
-		if (!std::regex_match(Conv::ToStdString(textBox3->Text), r))
+		if (!std::regex_match(Conv::ToStdString(textBox3->Text), r1))
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("êîìïüşòåğ íåïğàâèëüíî ââåäåí");
+			return;
+		}
+		if (Convert::ToInt32(textBox3->Text) <= 0)
 		{
 			if (save->Lang() != "Save\\rus_Rus.txt")
 				MessageBox::Show(Conv::ToSystemString(lang->error));
@@ -1016,9 +1061,19 @@ namespace computerClub {
 			return;
 		}
 
-		array<Object^>^ tmp_array = {textBox1->Text, comboBox1->Text, textBox3->Text, textBox4->Text};
+		int tmp_num;
+		if (comboBox1->Text == "Ïğèøåë" || comboBox1->Text == "Came")
+			tmp_num = 1;
+		if (comboBox1->Text == "Ñåë çà êîìïüşòåğ" || comboBox1->Text == "Village")
+			tmp_num = 2;
+		if (comboBox1->Text == "Âñòàë â î÷åğåäü" || comboBox1->Text == "Waiting")
+			tmp_num = 3;
+		if (comboBox1->Text == "Óøåë" || comboBox1->Text == "Gone")
+			tmp_num = 4;
+		
+		String^ tmp = textBox1->Text + " " + tmp_num + " " + textBox4->Text + " " + Convert::ToString(textBox3->Text);
 
-		dataGridView1->Rows->Add(tmp_array);
+		interpreter(tmp);
 		delete last_time;
 		last_time = tmp_time;
 	}
@@ -1029,8 +1084,7 @@ namespace computerClub {
 			if (!tables[i].get_status())
 			{
 				auto client = tables[i].get_client();
-				std::cout << client->get_time().output() << std::endl;
-				array<Object^>^ tmp_array = { Conv::ToSystemString(end_time->output()), "óøåë", Conv::ToSystemString(client->get_name()), ""};
+				array<Object^>^ tmp_array = { Conv::ToSystemString(end_time->output()), "Óøåë", Conv::ToSystemString(client->get_name()), ""};
 				dataGridView1->Rows->Add(tmp_array);
 				tables[i].left_client(*end_time);
 				delete client;
@@ -1038,7 +1092,7 @@ namespace computerClub {
 		while (clients_waiting.size() > 0)
 		{
 			auto client = clients_waiting.front();
-			array<Object^>^ tmp_array = { Conv::ToSystemString(end_time->output()), "óøåë", Conv::ToSystemString(client->get_name()), "" };
+			array<Object^>^ tmp_array = { Conv::ToSystemString(end_time->output()), "Óøåë", Conv::ToSystemString(client->get_name()), "" };
 			dataGridView1->Rows->Add(tmp_array);
 			delete client;
 			clients_waiting.pop();
@@ -1064,11 +1118,19 @@ namespace computerClub {
 	}
 	/*èìïîğò äàííûõ èç ôàéëà*/
 	private: System::Void èìïğîòèğîâàòüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		clear_space = true;
 		OpenFileDialog^ file = gcnew OpenFileDialog();
 		file->Filter = "txt files (*.txt)|*.txt";
 		file->ShowDialog();
-		auto lines = IO::File::ReadAllLines(file->FileName);
-
+		array<String^> ^lines;
+		try
+		{
+			lines = IO::File::ReadAllLines(file->FileName);
+		}
+		catch (...)
+		{
+			return;
+		}
 		clients = std::vector<Client*>(0);
 
 		try
@@ -1108,7 +1170,7 @@ namespace computerClub {
 			std::string line = "";
 			for(int i = 3; i < lines->Length; i++)
 			{
-				interpreter(Conv::ToStdString(lines[i]));
+				interpreter(lines[i]);
 			}
 		}
 		catch (std::exception ex)
@@ -1123,19 +1185,183 @@ namespace computerClub {
 		time_off();
 		clients.clear();
 	}
+	/*ñîõğàíåíèå â áä*/
 	private: System::Void ñîõğàíèòüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		std::string baseName = "Save\\database.bytes";
+
+		SQLiteConnection^ connection = gcnew SQLiteConnection();
+		connection->ConnectionString = Conv::ToSystemString("Data Source = " + baseName);
+		connection->Open();
+
+		SQLiteCommand^ command = gcnew SQLiteCommand(connection);
+		command->CommandText = Conv::ToSystemString("SELECT id FROM Users WHERE username = '" + save->Name() + "'");
+		command->CommandType = CommandType::Text;
+		SQLiteDataReader^ reader = command->ExecuteReader();
+		
+		int user_id = 0;
+
+		while(reader->Read())
+			user_id = reader->GetInt32(0);
+		reader->Close();
+		
+		command->CommandText = "SELECT id FROM Date_to_users WHERE user_if = " + 
+			Convert::ToString(user_id) +" AND date = " + 
+			Convert::ToString(dateTimePicker1->Value.DayOfYear);
+		reader = command->ExecuteReader();
+		
+		if (!reader->Read())
+		{
+			reader->Close();
+			command->CommandText = "INSERT INTO Date_to_users (user_if, date) VALUES(" + 
+				Convert::ToString(user_id) +", " + 
+				Convert::ToString(dateTimePicker1->Value.DayOfYear) + ")";
+			command->ExecuteNonQuery();
+		}
+
+		reader->Close();
+		command->CommandText = "SELECT id FROM Date_to_users WHERE user_if = " +
+			Convert::ToString(user_id) + " AND date = " +
+			Convert::ToString(dateTimePicker1->Value.DayOfYear);
+		reader = command->ExecuteReader();
+		int date_id = 0;
+		while (reader->Read())
+			date_id = reader->GetInt32(0);
+		
+		reader->Close();
+		
+
+		for (int i = 0; i < dataGridView1->Rows->Count; i++)
+		{
+			String^ tmp_str = "";
+			tmp_str += this->dataGridView1->Rows[i]->Cells[0]->Value + " ";
+			int tmp_num = 0;
+			if (this->dataGridView1->Rows[i]->Cells[1]->Value == "Ïğèøåë" ||
+				this->dataGridView1->Rows[i]->Cells[1]->Value == "Came")
+				tmp_num = 1;
+			else if (this->dataGridView1->Rows[i]->Cells[1]->Value == "Ñåë çà êîìïüşòåğ" ||
+				this->dataGridView1->Rows[i]->Cells[1]->Value == "Village")
+				tmp_num = 2;
+			else if (this->dataGridView1->Rows[i]->Cells[1]->Value == "Âñòàë â î÷åğåäü" ||
+				this->dataGridView1->Rows[i]->Cells[1]->Value == "Waiting")
+				tmp_num = 3;
+			else if (this->dataGridView1->Rows[i]->Cells[1]->Value == "Óøåë" ||
+				this->dataGridView1->Rows[i]->Cells[1]->Value == "Gone")
+				tmp_num = 4;
+			tmp_str += Convert::ToString(tmp_num) + " ";
+			tmp_str += this->dataGridView1->Rows[i]->Cells[2]->Value + " ";
+			tmp_str += this->dataGridView1->Rows[i]->Cells[3]->Value + "\n";
+			command->CommandText = "INSERT INTO Date_to_operations (date_id, operation) VALUES(" +
+				Convert::ToString(date_id) + ", '" +
+				tmp_str + "' )";
+			command->ExecuteNonQuery();
+		}
 	}
+	/*ôóíêöèÿ ñîòğèğîâêè êîìïüşòåğîâ ïî ğåíòàáèëüíîñòè*/
+	private: void sort()
+	{
+		for (int d = tables.size() / 2; d > 0; d /= 2)
+		{
+			for (int i = d; i < tables.size(); ++i)
+			{
+				for (int j = i - d; j >= 0 && tables[j].get_time() > tables[j + d].get_time(); j -= d)
+				{
+					std::swap(tables[j], tables[j + d]);
+				}
+			}
+		}
+
+		for (int d = tables.size() / 2; d > 0; d /= 2)
+		{
+			for (int i = d; i < tables.size(); ++i)
+			{
+				for (int j = i - d; j >= 0 && tables[j].get_cof() > tables[j + d].get_cof(); j -= d)
+				{
+					std::swap(tables[j], tables[j + d]);
+				}
+			}
+		}
+	}
+	/*âûâîä ğåçóëüòàòîâ çà äåíü*/
 	private: System::Void îò÷åòToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ tmp_str = "";
+
+		sort();
+
+		for each (auto table in tables)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				tmp_str += Conv::ToSystemString(lang->computer) + " ¹";
+			else
+				tmp_str += "Êîìïüşòåğ ¹";
+			tmp_str += Convert::ToString(table.get_num() + 1) + ": " +
+				Convert::ToString(table.get_cof() * save->Price()) + "; " +
+				Conv::ToSystemString(table.get_time().output()) + "\n";
+		}
+		
+		MessageBox::Show(tmp_str);
+	}
+	/*ôóíêöèÿ ïî ıêñïîğòó ñïèñêà â ôàéë txt*/
+	private: System::Void ıêñïîğòèğîâàòüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ tmp_str = "";
+
+		tmp_str += Convert::ToInt32(save->Tables()) + "\n";
+		tmp_str += Conv::ToSystemString(save->TimeStart()) + " " + Conv::ToSystemString(save->TimeEnd()) + "\n";
+		tmp_str += Convert::ToInt32(save->Price()) + "\n";
+
+		for (int i = 0; i < dataGridView1->Rows->Count; i++)
+		{
+			tmp_str += this->dataGridView1->Rows[i]->Cells[0]->Value + " ";
+			int tmp_num = 0;
+			if (this->dataGridView1->Rows[i]->Cells[1]->Value == "Ïğèøåë" || 
+				this->dataGridView1->Rows[i]->Cells[1]->Value == "Came")
+				tmp_num = 1;
+			else if (this->dataGridView1->Rows[i]->Cells[1]->Value == "Ñåë çà êîìïüşòåğ" || 
+				this->dataGridView1->Rows[i]->Cells[1]->Value == "Village")
+				tmp_num = 2;
+			else if (this->dataGridView1->Rows[i]->Cells[1]->Value == "Âñòàë â î÷åğåäü" || 
+				this->dataGridView1->Rows[i]->Cells[1]->Value == "Waiting")
+				tmp_num = 3;
+			else if (this->dataGridView1->Rows[i]->Cells[1]->Value == "Óøåë" ||
+				this->dataGridView1->Rows[i]->Cells[1]->Value == "Gone")
+				tmp_num = 4;
+			tmp_str += Convert::ToString(tmp_num) + " ";
+			tmp_str += this->dataGridView1->Rows[i]->Cells[2]->Value + " ";
+			tmp_str += this->dataGridView1->Rows[i]->Cells[3]->Value + "\n";
+		}
+
+		SaveFileDialog^ file = gcnew SaveFileDialog();
+		file->Filter = "txt files (*.txt)| *.txt";
+		file->ShowDialog();
+		try
+		{
+			IO::File::WriteAllText(file->FileName, tmp_str);
+		}
+		catch (...)
+		{
+			
+		}
 	}
 	/*ôóíêöèÿ ïî çàâåğøåíèş äíÿ ğàáîòû*/
-	private: System::Void çàêîí÷èòüÄåíüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-		time_off();
-	}
-	private: System::Void ıêñïîğòèğîâàòüToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-	}
-	private: System::Void dateTimePicker1_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
-	}
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		clear_space = true;
+		time_off();
+		clients.clear();
+		String^ tmp_str = "";
+
+		sort();
+
+		for each (auto table in tables)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				tmp_str += Conv::ToSystemString(lang->computer) + " ¹";
+			else
+				tmp_str += "Êîìïüşòåğ ¹";
+			tmp_str += Convert::ToString(table.get_num() + 1) + ": " +
+				Convert::ToString(table.get_cof() * save->Price()) + "; " +
+				Conv::ToSystemString(table.get_time().output()) + "\n";
+		}
+
+		MessageBox::Show(tmp_str);
 	}
 	/*ñìåíà íà ñâåòëóş òåìó*/
 	private: System::Void ñâåòëàÿToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -1182,6 +1408,88 @@ namespace computerClub {
 		lang = new Lang("Save\\eng_Eng.txt");
 		updateWindow();
 		saveSetting();
+	}
+	/*ñìåíà íà ïàòğèàòè÷íóş òåìó*/
+	private: System::Void ïàòğèàòè÷íàÿToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+		delete theme;
+		save->Theme("Save\\patriotic.txt");
+		theme = new Theme("Save\\patriotic.txt");
+		updateWindow();
+		saveSetting();
+	}
+	private: System::Void dateTimePicker1_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
+		clear_space = true;
+
+		std::string baseName = "Save\\database.bytes";
+
+		SQLiteConnection^ connection = gcnew SQLiteConnection();
+		connection->ConnectionString = Conv::ToSystemString("Data Source = " + baseName);
+		connection->Open();
+
+		SQLiteCommand^ command = gcnew SQLiteCommand(connection);
+		command->CommandText = Conv::ToSystemString("SELECT id FROM Users WHERE username = '" + save->Name() + "'");
+		command->CommandType = CommandType::Text;
+		SQLiteDataReader^ reader = command->ExecuteReader();
+
+		int user_id = 0;
+
+		while (reader->Read())
+			user_id = reader->GetInt32(0);
+		reader->Close();
+
+		command->CommandText = "SELECT id FROM Date_to_users WHERE user_if = " +
+			Convert::ToString(user_id) + " AND date = " +
+			Convert::ToString(dateTimePicker1->Value.DayOfYear);
+		reader = command->ExecuteReader();
+
+		if (!reader->Read())
+		{
+			reader->Close();
+			command->CommandText = "INSERT INTO Date_to_users (user_if, date) VALUES(" +
+				Convert::ToString(user_id) + ", " +
+				Convert::ToString(dateTimePicker1->Value.DayOfYear) + ")";
+			command->ExecuteNonQuery();
+		}
+
+		reader->Close();
+		command->CommandText = "SELECT id FROM Date_to_users WHERE user_if = " +
+			Convert::ToString(user_id) + " AND date = " +
+			Convert::ToString(dateTimePicker1->Value.DayOfYear);
+		reader = command->ExecuteReader();
+		int date_id = 0;
+		while (reader->Read())
+			date_id = reader->GetInt32(0);
+		reader->Close();
+
+		clients = std::vector<Client*>(0);
+
+		init_tables(save->Tables());
+
+		this->dataGridView1->Rows->Clear();
+
+		command->CommandText = "SELECT operation FROM Date_to_operations WHERE date_id = " +
+			Convert::ToString(date_id);
+
+		reader = command->ExecuteReader();
+
+		try
+		{
+			while (reader->Read())
+			{
+				interpreter(reader->GetString(0));
+			}
+		}
+		catch (std::exception ex)
+		{
+			if (save->Lang() != "Save\\rus_Rus.txt")
+				MessageBox::Show(Conv::ToSystemString(lang->error));
+			else
+				MessageBox::Show("îøèáêà");
+			return;
+		}
+
+		time_off();
+		clients.clear();
 	}
 };
 }

@@ -13,6 +13,7 @@ namespace TableSpace
         Client* client;
         Time time_use;
         int cof;
+        int num;
     public:
         Table(Client* _client, Time _time_use, bool _status) :
             client(_client),
@@ -24,9 +25,11 @@ namespace TableSpace
         Client* get_client() const;
         Time get_time() const;
         int get_cof() const;
+        int get_num() const;
 
         void set_client(Client* client);
         void set_status(bool status);
+        void set_num(int num) ;
 
         void left_client(Time time, Time time_start);
         void left_client(Time time);
